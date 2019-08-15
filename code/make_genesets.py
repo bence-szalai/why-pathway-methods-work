@@ -88,3 +88,35 @@ def make_gene_dict_msigdb(setname):
     fout=open('../results/genesets/msigdb/dicts/dicts%s_gene_set.pkl' % setname,'wb')
     pckl.dump(gene_set,fout)
     fout.close()
+    
+def make_csv_geneset(dname,fname):
+    """ makese csv from dict, for viper"""
+    fin=open('../results/genesets/%s/dicts/%s.pkl' % (dname,fname),'br')
+    geneset=pckl.load(fin)
+    fin.close()
+    l=max([len(geneset[x]) for x in geneset.keys()])
+    results=pd.DataFrame('NONE',index=geneset.keys(),columns=range(l))
+    for setname in geneset:
+        results.loc[setname,range(len(geneset[setname]))]=geneset[setname]
+    results.to_csv('../results/genesets/%s/csvs/%s.csv' % (dname,fname),sep=',')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
