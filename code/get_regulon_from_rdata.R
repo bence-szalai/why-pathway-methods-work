@@ -1,4 +1,4 @@
-### saves wiper regulons as csv files
+### saves viper regulons as csv files
 
 for (confindence in c('A','B','C','D','E','BEST')){
   load(paste0('../data/viper_rdata/',confindence,'_viperRegulon.rdata'))

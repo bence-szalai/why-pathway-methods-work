@@ -4,3 +4,5 @@
 *.pkl
 *.csv
 *.key
+*.xlsx
+notebooks/.ipynb_checkpoints/analysis_pipeline-checkpoint.ipynb

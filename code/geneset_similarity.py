@@ -5,11 +5,11 @@ import pickle as pckl
 def get_composational_similarity(dorothea,msigdb,sim_type='jaccard'):
     """get composational similarity between gene sets
     sim_type: {jaccard,overlap}"""
-    fin=open('../results/genesets/dorothea/%s_set_gene.pkl' % dorothea,'rb')
+    fin=open('../results/genesets/dorothea/dicts/%s_set_gene.pkl' % dorothea,'rb')
     data1=pckl.load(fin)
     fin.close()
     
-    fin=open('../results/genesets/msigdb/%s_set_gene.pkl' % msigdb,'rb')
+    fin=open('../results/genesets/msigdb/dicts/%s_set_gene.pkl' % msigdb,'rb')
     data2=pckl.load(fin)
     fin.close()
     
@@ -31,8 +31,8 @@ def get_composational_similarity(dorothea,msigdb,sim_type='jaccard'):
     return results
     
 for dorothea in ['dorothea_A','dorothea_B','dorothea_C','dorothea_D',
-                'dorothea_E','dorothea_BEST']:
+                'dorothea_E','dorothea_BEST','dorothea_AB','dorothea_ABC',
+                'dorothea_ABCD','dorothea_ABCDE']:
     for msigdb in ['BIOCARTA','CGP','KEGG','REACTOME']:
         for sim_type in ['jaccard','overlap']:
             get_composational_similarity(dorothea,msigdb,sim_type)
-        
