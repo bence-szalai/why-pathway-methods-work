@@ -1,7 +1,3 @@
-data=read.csv('../results/genesets/dorothea/csvs/dorothea_A_set_gene.csv',
-              sep=',',check.names=FALSE,header = T,row.names = 1)
-data=as.matrix(data)
-
 make_regulon=function(x){
   temp=unique(x)
   fil=temp!='NONE'
@@ -13,5 +9,25 @@ make_regulon=function(x){
   result
 }
 
-data=apply(data,1,make_regulon)
-save(data,file='../results/genesets/dorothea/rdata/dorothea_A_set_gene.rdata')
+fnames=c('A','B','C','D','E','AB','ABC','ABCD','ABCDE','BEST')
+
+for (fname in fnames){
+  data=read.csv(paste0('../results/genesets/dorothea/csvs/dorothea_',fname,'_set_gene.csv'),
+                sep=',',check.names=FALSE,header = T,row.names = 1)
+  data=as.matrix(data)
+  data=apply(data,1,make_regulon)
+  save(data,file=paste0('../results/genesets/dorothea/rdata/dorothea_',fname,'_set_gene.rdata'))
+}
+
+fnames=c('BIOCARTA','KEGG','CGP','REACTOME')
+
+for (fname in fnames){
+  data=read.csv(paste0('../results/genesets/msigdb/csvs/',fname,'_set_gene.csv'),
+                sep=',',check.names=FALSE,header = T,row.names = 1)
+  data=as.matrix(data)
+  data=apply(data,1,make_regulon)
+  save(data,file=paste0('../results/genesets/msigdb/rdata/',fname,'_set_gene.rdata'))
+}
+
+
+
