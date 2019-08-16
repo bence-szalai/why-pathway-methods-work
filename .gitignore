@@ -6,3 +6,4 @@
 *.key
 *.xlsx
 notebooks/.ipynb_checkpoints/analysis_pipeline-checkpoint.ipynb
+data/gdsc/sanger1018_brainarray_ensemblgene_rma.txt
