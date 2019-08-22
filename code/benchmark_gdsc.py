@@ -49,7 +49,7 @@ for method in ['KEGG','dorothea_A','dorothea_AB','dorothea_BEST',
             model_2=smf.ols('Score ~ TCGA + MSI',data=response_drug).fit()
             resid_2=model_2.resid
             results.loc[drug,score]=pcor(resid_1,resid_2)[0]
-    results.to_csv('../results/benchmark/gdsc/partcors/%.csv' % method,sep=',')
+    results.to_csv('../results/benchmark/gdsc/partcors/%s.csv' % method,sep=',')
         
         
                 
