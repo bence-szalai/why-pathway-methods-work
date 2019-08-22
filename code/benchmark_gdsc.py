@@ -21,27 +21,35 @@ fil=np.in1d(anno['COSMIC'],cosmics)
 anno=anno[fil]
 fil=np.in1d(response['COSMIC_ID'],cosmics)
 response=response[fil]
-scores=scores[cosmics]
-scores=scores.T
 
-results=pd.DataFrame(index=list(set(response['DRUG_ID'])),
+for method in ['KEGG','dorothea_A','dorothea_AB','dorothea_BEST',
+                'BIOCARTA','REACTOME','CGP','dorothea_ABC',
+                'dorothea_ABCD','dorothea_ABCDE','dorothea_B','dorothea_C',
+                'dorothea_D','dorothea_E']:
+    scores=pd.read_csv('../results/benchmark/scores/gdsc/%s.csv' % method,
+                sep=',',header=0,index_col=0)
+    scores=scores[cosmics]
+    scores=scores.T
+
+    results=pd.DataFrame(index=list(set(response['DRUG_ID'])),
                     columns=scores.columns)
-for drug in results.index:
-    print(drug)
-    fil=response['DRUG_ID']==drug
-    response_drug=response[fil]
-    response_drug['TCGA']=anno.loc[response_drug['COSMIC_ID'].values,
-                                                        'TCGA'].values
-    response_drug['MSI']=anno.loc[response_drug['COSMIC_ID'].values,
-                                                        'MSI'].values
-    model_1=smf.ols('LN_IC50 ~ TCGA + MSI',data=response_drug).fit()
-    resid_1=model_1.resid
-    for score in results.columns:
-        response_drug['Score']=scores.loc[response_drug['COSMIC_ID'].values,
-                                                        score].values
-        model_2=smf.ols('Score ~ TCGA + MSI',data=response_drug).fit()
-        resid_2=model_2.resid
-        results.loc[drug,score]=pcor(resid_1,resid_2)[0]
+    for drug in results.index:
+        print(drug)
+        fil=response['DRUG_ID']==drug
+        response_drug=response[fil]
+        response_drug['TCGA']=anno.loc[response_drug['COSMIC_ID'].values,
+                                                            'TCGA'].values
+        response_drug['MSI']=anno.loc[response_drug['COSMIC_ID'].values,
+                                                            'MSI'].values
+        model_1=smf.ols('LN_IC50 ~ TCGA + MSI',data=response_drug).fit()
+        resid_1=model_1.resid
+        for score in results.columns:
+            response_drug['Score']=scores.loc[response_drug['COSMIC_ID'].values,
+                                                            score].values
+            model_2=smf.ols('Score ~ TCGA + MSI',data=response_drug).fit()
+            resid_2=model_2.resid
+            results.loc[drug,score]=pcor(resid_1,resid_2)[0]
+    results.to_csv('../results/benchmark/gdsc/partcors/%.csv' % method,sep=',')
         
         
                 
