@@ -22,4 +22,13 @@ for method in ['KEGG','dorothea_A','dorothea_AB','dorothea_BEST',
             results.loc[pathway,score]=ROCAUC(y_tr,y_pr)
     results.to_csv('../results/benchmark/progeny/rocaucs/%s.csv' % method,
                     sep=',')
-    
+
+results=pd.DataFrame(index=list(set(progeny['pathway'])),
+                    columns=range(1000))
+for i in range(1000):
+    y_pr=np.random.uniform(size=len(progeny))
+    for pathway in results.index:
+        y_tr=(progeny['pathway']==pathway)*1
+        results.loc[pathway,i]=ROCAUC(y_tr,y_pr)
+results.to_csv('../results/benchmark/progeny/rocaucs/random_dist.csv',
+                    sep=',')
