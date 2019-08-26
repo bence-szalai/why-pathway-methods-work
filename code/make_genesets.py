@@ -85,7 +85,8 @@ def make_gene_dict_msigdb(setname):
     
     #gene - set dict
     gene_set=results.groupby('Gene')['Set'].apply(list).to_dict()
-    fout=open('../results/genesets/msigdb/dicts/dicts%s_gene_set.pkl' % setname,'wb')
+    fout=open('../results/genesets/msigdb/dicts/dicts%s_gene_set.pkl' % setname,
+                'wb')
     pckl.dump(gene_set,fout)
     fout.close()
     
@@ -99,7 +100,7 @@ def make_csv_geneset(dname,fname):
     for setname in geneset:
         results.loc[setname,range(len(geneset[setname]))]=geneset[setname]
     results.to_csv('../results/genesets/%s/csvs/%s.csv' % (dname,fname),sep=',')
-    
+        
     
     
     
