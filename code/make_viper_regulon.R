@@ -29,5 +29,12 @@ for (fname in fnames){
   save(data,file=paste0('../results/genesets/msigdb/rdata/',fname,'_set_gene.rdata'))
 }
 
+fnames=unlist(lapply(list.files('../results/genesets/overlaps/csvs/'),FUN=function(x) {substr(x,start = 1,stop = nchar(x)-4)}))
 
-
+for (fname in fnames){
+  data=read.csv(paste0('../results/genesets/overlaps/csvs/',fname,'.csv'),
+                sep=',',check.names=FALSE,header = T,row.names = 1)
+  data=as.matrix(data)
+  data=apply(data,1,make_regulon)
+  save(data,file=paste0('../results/genesets/overlaps/rdata/',fname,'.rdata'))
+}

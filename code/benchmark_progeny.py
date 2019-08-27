@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
+import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
 progeny=pd.read_csv('../results/benchmark/progeny/raw/progeny_meta.csv',
                         sep=',',header=0,index_col=0)
                         
+methods=[x[:-4] for x in os.listdir('../results/benchmark/scores/progeny/')]
 
-for method in ['KEGG','dorothea_A','dorothea_AB','dorothea_BEST',
-                'BIOCARTA','REACTOME','CGP','dorothea_ABC',
-                'dorothea_ABCD','dorothea_ABCDE','dorothea_B','dorothea_C',
-                'dorothea_D','dorothea_E']:
+for method in methods:
     print(method)
     scores=pd.read_csv('../results/benchmark/scores/progeny/%s.csv' % method,
                     sep=',',header=0,index_col=0).T
