@@ -1,5 +1,5 @@
 library(viper)
-ncores=11
+ncores=6
 set.seed(19890904)
 #gdsc
 gdsc=read.csv('../results/benchmark/gdsc/raw/gdsc_gex.csv',sep=',',header=T,row.names = 1,check.names=FALSE)
@@ -95,6 +95,7 @@ for (regulon_name in regulon_names){
   write.csv(activities,paste0('../results/benchmark/scores/tcga/',regulon_name,'.csv'))
 }
 
+#overlaps
 regulon_type='overlaps'
 regulon_names=unlist(lapply(list.files('../results/genesets/overlaps/rdata/'),
                             function(x){substr(x,start = 1,stop = nchar(x)-6)}))
