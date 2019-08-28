@@ -10,3 +10,4 @@ data/gdsc/sanger1018_brainarray_ensemblgene_rma.txt
 notebooks/.ipynb_checkpoints/quality_similarity_analysis-checkpoint.ipynb
 data/tcga/GSE62944_06_01_15_TCGA_24_CancerType_Samples.txt
 data/tcga/GSE62944_06_01_15_TCGA_24_Normal_CancerType_Samples.txt
+notebooks/.ipynb_checkpoints/data_preprocess_and_generation-checkpoint.ipynb
