@@ -39,8 +39,11 @@ for set1 in snames:
     for set2 in snames:
         if set1<set2:
             for sim_type in ['jaccard','overlap']:
-                get_composational_similarity('single',set1,'single',set2,
+                try:
+                    get_composational_similarity('single',set1,'single',set2,
                                 sim_type=sim_type)
+                except:
+                    print('Problem',set1,set2)
 
 fnames=os.listdir('../results/genesets/random/dicts/')
 rnames=[x[:-4] for x in fnames]
@@ -48,7 +51,10 @@ rnames=[x[:-4] for x in fnames]
 for set1 in snames:
     for set2 in rnames:
         for sim_type in ['jaccard','overlap']:
-            get_composational_similarity('single',set1,'random',set2,
+            try:
+                get_composational_similarity('single',set1,'random',set2,
                                 sim_type=sim_type)
+            except:
+                print('Problem',set1,set2)
                                 
             
