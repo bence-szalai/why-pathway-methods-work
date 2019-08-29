@@ -1,5 +1,5 @@
 library(viper)
-ncores=2
+ncores=1
 set.seed(19890904)
 
 for (dname in c('tcga')){
