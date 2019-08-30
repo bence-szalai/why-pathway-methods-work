@@ -33,9 +33,9 @@ def get_composational_similarity(dname1,setname1,dname2,setname2,
                                         % (setname1,setname2,sim_type),
                     sep=',')
 
-snames=['dorothea_AB','KEGG','REACTOME','CGP']    
+snames=['dorothea_AB','KEGG','REACTOME','CGP','BIOCARTA']    
             
-for set1 in snames:
+for set1 in ['BIOCARTA']:#snames:
     for set2 in snames:
         if set1<set2:
             for sim_type in ['jaccard','overlap']:
@@ -48,7 +48,7 @@ for set1 in snames:
 fnames=os.listdir('../results/genesets/random/dicts/')
 rnames=[x[:-4] for x in fnames]
 
-for set1 in snames:
+for set1 in ['BIOCARTA']:#snames:
     for set2 in rnames:
         for sim_type in ['jaccard','overlap']:
             try:

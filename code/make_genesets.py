@@ -157,6 +157,11 @@ def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
     results['Gene']=genes
     results.to_csv('../results/genesets/random/csvs/%s.csv' \
                                                         % fname,sep=',')
+                                    
+for setname1 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
+    for setname2 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
+        if (setname1<setname2):
+            make_overlap_gene_sets(setname1,setname2)        
     
         
     
