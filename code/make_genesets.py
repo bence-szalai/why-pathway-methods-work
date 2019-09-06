@@ -123,8 +123,7 @@ def make_overlap_gene_sets(setname1,setname2):
         results=pd.DataFrame(index=range(len(sets)),columns=['Set','Gene'])
         results['Set']=sets
         results['Gene']=genes
-        results.to_csv('../results/genesets/overlap/csvs/%s.csv' \
-                                                        % fnames[i],sep=',')
+        results.to_csv('../results/genesets/overlap/csvs/'+fnames[i],sep=',')
                                                         
 def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
     np.random.seed(s)
@@ -158,10 +157,13 @@ def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
     results.to_csv('../results/genesets/random/csvs/%s.csv' \
                                                         % fname,sep=',')
                                     
-for setname1 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
+for setname1 in ['KEGG','dorothea_AB']:
     for setname2 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
-        if (setname1<setname2):
-            make_overlap_gene_sets(setname1,setname2)        
+        if setname1!=setname2:    
+            try:
+                make_overlap_gene_sets(setname1,setname2)
+            except:
+                print('Problem',setname1,setname2)
     
         
     

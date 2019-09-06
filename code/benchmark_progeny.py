@@ -3,10 +3,14 @@ import numpy as np
 import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
-progeny=pd.read_csv('../results/benchmark/progeny/raw/progeny_meta.csv',
+progeny=pd.read_csv('../results/benchmark/datasets/progeny_meta.csv',
                         sep=',',header=0,index_col=0)
                         
 methods=[x[:-4] for x in os.listdir('../results/benchmark/scores/progeny/')]
+try:
+    methods.remove('.DS_S')
+except:
+    pass
 
 for method in methods:
     print(method)

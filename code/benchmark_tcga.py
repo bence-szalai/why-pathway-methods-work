@@ -3,8 +3,12 @@ import numpy as np
 import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
-tcga=pd.read_csv('../results/benchmark/tcga/raw/tcga_meta.csv',
+tcga=pd.read_csv('../results/benchmark/datasets/tcga_meta.csv',
                         sep=',',header=0,index_col=0)
+new_index=[]
+for sample in tcga.index:
+    new_index.append(sample.replace('-','.'))
+tcga.index=new_index
                         
 methods=[x[:-4] for x in os.listdir('../results/benchmark/scores/tcga/')]
 for method in methods:
