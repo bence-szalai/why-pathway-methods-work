@@ -111,19 +111,21 @@ def make_overlap_gene_sets(setname1,setname2):
         fout=open('../results/genesets/overlap/dicts/'+fnames[i],'wb')
         pckl.dump(genesets[i],fout)
         fout.close()
-    fnames=['%s_overlap_%s.csv' % (setname1,setname2),
-            '%s_minus_%s.csv' % (setname1,setname2),
-            '%s_minus_%s.csv' % (setname2,setname1)]
+    fnames=['%s_overlap_%s' % (setname1,setname2),
+            '%s_minus_%s' % (setname1,setname2),
+            '%s_minus_%s' % (setname2,setname1)]
     for i in range(3):
-        sets=[]
-        genes=[]
-        for s in genesets[i]:
-            sets+=[s]*len(genesets[i][s])
-            genes+=genesets[i][s]
-        results=pd.DataFrame(index=range(len(sets)),columns=['Set','Gene'])
-        results['Set']=sets
-        results['Gene']=genes
-        results.to_csv('../results/genesets/overlap/csvs/'+fnames[i],sep=',')
+        for j in range(len(genesets[i])//1000+1):
+            sets=[]
+            genes=[]
+            for s in list(genesets[i].keys())[j*1000:(j+1)*1000]:
+                sets+=[s]*len(genesets[i][s])
+                genes+=genesets[i][s]
+            results=pd.DataFrame(index=range(len(sets)),columns=['Set','Gene'])
+            results['Set']=sets
+            results['Gene']=genes
+            results.to_csv('../results/genesets/overlap/csvs/%s_%i.csv' \
+                                        % (fnames[i],j),sep=',')
                                                         
 def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
     np.random.seed(s)
@@ -157,9 +159,9 @@ def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
     results.to_csv('../results/genesets/random/csvs/%s.csv' \
                                                         % fname,sep=',')
                                     
-for setname1 in ['KEGG','dorothea_AB']:
+for setname1 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
     for setname2 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
-        if setname1!=setname2:    
+        if setname1<setname2:    
             try:
                 make_overlap_gene_sets(setname1,setname2)
             except:
