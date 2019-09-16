@@ -29,6 +29,14 @@ def get_composational_similarity(dname1,setname1,dname2,setname2,
                 num=len(data1[gs1]&data2[gs2])
                 denom=np.min([len(data1[gs1]),len(data2[gs2])])
                 results.loc[gs1,gs2]=num/denom
+            elif sim_type=='first':
+                num=len(data1[gs1]&data2[gs2])
+                denom=len(data1[gs1])
+                results.loc[gs1,gs2]=num/denom
+            elif sim_type=='second':
+                num=len(data1[gs1]&data2[gs2])
+                denom=len(data1[gs2])
+                results.loc[gs1,gs2]=num/denom
     results.to_csv('../results/similarity/%s_%s_%s.csv' \
                                         % (setname1,setname2,sim_type),
                     sep=',')
@@ -38,23 +46,9 @@ snames=['dorothea_AB','KEGG','REACTOME','CGP','BIOCARTA']
 for set1 in snames:
     for set2 in snames:
         if set1<set2:
-            for sim_type in ['jaccard','overlap']:
+            for sim_type in ['jaccard','overlap','first','second']:
                 try:
                     get_composational_similarity('single',set1,'single',set2,
                                 sim_type=sim_type)
                 except:
                     print('Problem',set1,set2)
-
-fnames=os.listdir('../results/genesets/random/dicts/')
-rnames=[x[:-4] for x in fnames]
-
-for set1 in snames:
-    for set2 in rnames:
-        for sim_type in ['jaccard','overlap']:
-            try:
-                get_composational_similarity('single',set1,'random',set2,
-                                sim_type=sim_type)
-            except:
-                print('Problem',set1,set2)
-                                
-            
