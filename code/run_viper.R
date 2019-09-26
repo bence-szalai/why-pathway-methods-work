@@ -2,10 +2,10 @@ library(viper)
 ncores=1
 set.seed(19890904)
 
-for (dname in c('tcga','progeny')){
+for (dname in c('progeny')){
   set.seed(19890904)
   gex=read.csv(paste0('../results/benchmark/datasets/',dname,'_data.csv'),sep=',',header=T,row.names = 1)
-  gex=abs(gex)
+  #gex=abs(gex)
   
   genesets=list.files('../results/genesets/single/rdatas/')
   genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))

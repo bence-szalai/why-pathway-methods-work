@@ -3,6 +3,9 @@ import numpy as np
 import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
+def rocauc(x):
+    return ROCAUC(y_tr,x)
+
 progeny=pd.read_csv('../results/benchmark/datasets/progeny_meta.csv',
                         sep=',',header=0,index_col=0)
                         
@@ -20,9 +23,7 @@ for method in methods:
                             columns=scores.columns)
     for pathway in results.index:
         y_tr=(progeny['pathway']==pathway)*1
-        for score in results.columns:
-            y_pr=scores[score]
-            results.loc[pathway,score]=ROCAUC(y_tr,y_pr)
+        results.loc[pathway,:]=scores.apply(rocauc,0)
     results.to_csv('../results/benchmark/progeny/rocaucs/%s.csv' % method,
                     sep=',')
 

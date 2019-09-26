@@ -35,7 +35,7 @@ def get_composational_similarity(dname1,setname1,dname2,setname2,
                 results.loc[gs1,gs2]=num/denom
             elif sim_type=='second':
                 num=len(data1[gs1]&data2[gs2])
-                denom=len(data1[gs2])
+                denom=len(data2[gs2])
                 results.loc[gs1,gs2]=num/denom
     results.to_csv('../results/similarity/%s_%s_%s.csv' \
                                         % (setname1,setname2,sim_type),
