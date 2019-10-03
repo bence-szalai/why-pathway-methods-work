@@ -126,47 +126,7 @@ def make_overlap_gene_sets(setname1,setname2):
             results['Gene']=genes
             results.to_csv('../results/genesets/overlap/csvs/%s_%i.csv' \
                                         % (fnames[i],j),sep=',')
-                                                        
-def make_random_geneset(fnames=['KEGG'],s=19890904,n=200):
-    np.random.seed(s)
-    genes=set([])
-    lens=[]
-    for fname in fnames:
-        fin=open('../results/genesets/single/dicts/%s.pkl' % fname,'rb')
-        geneset=pckl.load(fin)
-        fin.close()
-        for setname in geneset:
-            genes=genes | geneset[setname]
-            lens.append(len(geneset[setname]))
-    genes=list(genes)
-    random_set={}
-    for i in range(n):
-        l=np.random.choice(lens,1)[0]
-        random_set['Geneset'+str(i)]=set(np.random.choice(genes,l,False))
-    fname='_'.join(fnames+[str(n),str(s)])
-    fout=open('../results/genesets/random/dicts/%s.pkl' % fname,'wb')
-    pckl.dump(random_set,fout)
-    fout.close()
-    
-    sets=[]
-    genes=[]
-    for s in random_set:
-        sets+=[s]*len(random_set[s])
-        genes+=random_set[s]
-    results=pd.DataFrame(index=range(len(sets)),columns=['Set','Gene'])
-    results['Set']=sets
-    results['Gene']=genes
-    results.to_csv('../results/genesets/random/csvs/%s.csv' \
-                                                        % fname,sep=',')
                                     
-for setname1 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
-    for setname2 in ['BIOCARTA','CGP','KEGG','REACTOME','dorothea_AB']:
-        if setname1<setname2:    
-            try:
-                make_overlap_gene_sets(setname1,setname2)
-            except:
-                print('Problem',setname1,setname2)
-    
         
     
     

@@ -1,54 +1,47 @@
 import pandas as pd
 import numpy as np
-import pickle as pckl
-import os
 
-def get_composational_similarity(dname1,setname1,dname2,setname2,
-                                sim_type='jaccard'):
+def get_composational_similarity(setname1,setname2):
     """get composational similarity between gene sets
     sim_type: {jaccard,overlap}"""
-    fin=open('../results/genesets/%s/dicts/%s.pkl' % (dname1,setname1),
-            'rb')
-    data1=pckl.load(fin)
-    fin.close()
+   
+    data1=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname1,
+                    sep=',',header=0,index_col=0)
+    data1['Indicator']=1
+    data1=data1.pivot(index='Gene',columns='Set',values='Indicator')
     
-    fin=open('../results/genesets/%s/dicts/%s.pkl' % (dname2,setname2),
-            'rb')
-    data2=pckl.load(fin)
-    fin.close()
     
-    results=pd.DataFrame(0,index=data1.keys(),columns=data2.keys())
+    data2=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname2,
+                    sep=',',header=0,index_col=0)
+    data2['Indicator']=1
+    data2=data2.pivot(index='Gene',columns='Set',values='Indicator')
     
-    for gs1 in data1.keys():
-        for gs2 in data2.keys():
-            if sim_type=='jaccard':
-                num=len(data1[gs1]&data2[gs2])
-                denom=len(data1[gs1]|data2[gs2])
-                results.loc[gs1,gs2]=num/denom
-            elif sim_type=='overlap':
-                num=len(data1[gs1]&data2[gs2])
-                denom=np.min([len(data1[gs1]),len(data2[gs2])])
-                results.loc[gs1,gs2]=num/denom
-            elif sim_type=='first':
-                num=len(data1[gs1]&data2[gs2])
-                denom=len(data1[gs1])
-                results.loc[gs1,gs2]=num/denom
-            elif sim_type=='second':
-                num=len(data1[gs1]&data2[gs2])
-                denom=len(data2[gs2])
-                results.loc[gs1,gs2]=num/denom
-    results.to_csv('../results/similarity/%s_%s_%s.csv' \
-                                        % (setname1,setname2,sim_type),
-                    sep=',')
-
-snames=['dorothea_AB','KEGG','REACTOME','CGP','BIOCARTA']    
-            
-for set1 in snames:
-    for set2 in snames:
-        if set1<set2:
-            for sim_type in ['jaccard','overlap','first','second']:
-                try:
-                    get_composational_similarity('single',set1,'single',set2,
-                                sim_type=sim_type)
-                except:
-                    print('Problem',set1,set2)
+    all_genes=list(set(data1.index) | set(data2.index))
+    data1=data1.loc[all_genes]
+    data2=data2.loc[all_genes]
+    fil=pd.isnull(data1); data1[fil]=0; data1=data1.astype(int)
+    fil=pd.isnull(data2); data2[fil]=0; data2=data2.astype(int)
+    
+    intersection=pd.DataFrame(np.dot(data1.T,data2),
+                            index=data1.columns,columns=data2.columns)
+    union=data1.sum().values.reshape((-1,1))+\
+            data2.sum().values.reshape((1,-1))-\
+            intersection.values
+    union=pd.DataFrame(union,index=data1.columns,columns=data2.columns)
+    
+    jaccard=intersection/union
+    overlap1=(intersection.T/data1.sum()).T
+    overlap2=intersection/data2.sum()
+    overlap=overlap1.copy()
+    fil=overlap2>overlap1
+    overlap[fil]=overlap2[fil]
+    
+    jaccard.to_csv('../results/similarity/%s_%s_jaccard.csv' %\
+                    (setname1,setname2),sep=',')
+    overlap.to_csv('../results/similarity/%s_%s_overlap.csv' %\
+                    (setname1,setname2),sep=',')
+    overlap1.to_csv('../results/similarity/%s_%s_first.csv' %\
+                    (setname1,setname2),sep=',')
+    overlap2.to_csv('../results/similarity/%s_%s_second.csv' %\
+                    (setname1,setname2),sep=',')
+                    

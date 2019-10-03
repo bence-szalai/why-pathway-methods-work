@@ -1,27 +1,24 @@
 library(viper)
-ncores=1
 set.seed(19890904)
 
-for (dname in c('progeny')){
-  set.seed(19890904)
-  gex=read.csv(paste0('../results/benchmark/datasets/',dname,'_data.csv'),sep=',',header=T,row.names = 1)
-  #gex=abs(gex)
-  
-  genesets=list.files('../results/genesets/single/rdatas/')
-  genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
-  for (geneset in genesets){
-    load(paste0('../results/genesets/single/rdatas/',geneset,'.rdata'))
-    activities = viper(eset = gex, regulon = viper_geneset, nes = T, 
-                       method = 'none' ,minsize = 4, eset.filter = F,cores = ncores)
-    write.csv(activities,paste0('../results/benchmark/scores/',dname,'/',geneset,'.csv'))
+for (dname in c('progeny','tcga')){
+  if (dname=='progeny'){
+    ncores=10
+  } else {
+    ncores=4
   }
-  
-  genesets=list.files('../results/genesets/overlap/rdatas/')
-  genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
-  for (geneset in genesets){
-    load(paste0('../results/genesets/overlap/rdatas/',geneset,'.rdata'))
-    activities = viper(eset = gex, regulon = viper_geneset, nes = T, 
-                       method = 'none' ,minsize = 4, eset.filter = F,cores = ncores)
-    write.csv(activities,paste0('../results/benchmark/scores/',dname,'/',geneset,'.csv'))
+  for (abs_type in c('_abs','')){
+    gex=read.csv(paste0('../results/benchmark/datasets/',dname,'_data.csv'),sep=',',header=T,row.names = 1)
+    if (abs_type=='_abs'){
+      gex=abs(gex)
+    }
+    genesets=list.files('../results/genesets/single/rdatas/')
+    genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
+    for (geneset in genesets){
+      load(paste0('../results/genesets/single/rdatas/',geneset,'.rdata'))
+      activities = viper(eset = gex, regulon = viper_geneset, nes = T, 
+                         method = 'none' ,minsize = 4, eset.filter = F,cores = ncores)
+      write.csv(activities,paste0('../results/benchmark/scores/',dname,'/',geneset,abs_type,'.csv'))
+    }
   }
 }
