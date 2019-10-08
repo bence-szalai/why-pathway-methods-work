@@ -3,6 +3,9 @@ import numpy as np
 import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
+def my_rocauc(x):
+    return ROCAUC(y_tr,x)
+
 tcga=pd.read_csv('../results/benchmark/datasets/tcga_meta.csv',
                         sep=',',header=0,index_col=0)
 new_index=[]
@@ -11,6 +14,12 @@ for sample in tcga.index:
 tcga.index=new_index
                         
 methods=[x[:-4] for x in os.listdir('../results/benchmark/scores/tcga/')]
+
+try:
+    methods.remove('.DS_S')
+except:
+    pass
+    
 for method in methods:
     print(method)
     scores=pd.read_csv('../results/benchmark/scores/tcga/%s.csv' % method,
@@ -20,10 +29,8 @@ for method in methods:
     for tissue in results.index:
         indexes=tcga.index[tcga['TCGA']==tissue]
         y_tr=tcga.loc[indexes,'Tumor']
-        for score in results.columns:
-            y_pr=scores.loc[indexes,score]
-            results.loc[tissue,score]=ROCAUC(y_tr,y_pr)
-    results.to_csv('../results/benchmark/tcga/rocaucs/%s.csv' % method,
+        results.loc[tissue,:]=scores.loc[indexes].apply(my_rocauc,0)
+    results.to_csv('../results/benchmark/rocaucs/tcga/%s.csv' % method,
                     sep=',')
 
 results=pd.DataFrame(index=list(set(tcga['TCGA'])),
@@ -35,5 +42,5 @@ for i in range(1000):
         y_tr=tcga.loc[indexes,'Tumor']
         y_pr=scores[indexes]
         results.loc[tissue,i]=ROCAUC(y_tr,y_pr)
-results.to_csv('../results/benchmark/tcga/rocaucs/random_dist.csv',
+results.to_csv('../results/benchmark/rocaucs/tcga/random_dist.csv',
                     sep=',')

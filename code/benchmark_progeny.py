@@ -3,7 +3,7 @@ import numpy as np
 import os
 from sklearn.metrics import roc_auc_score as ROCAUC
 
-def rocauc(x):
+def my_rocauc(x):
     return ROCAUC(y_tr,x)
 
 progeny=pd.read_csv('../results/benchmark/datasets/progeny_meta.csv',
@@ -23,8 +23,8 @@ for method in methods:
                             columns=scores.columns)
     for pathway in results.index:
         y_tr=(progeny['pathway']==pathway)*1
-        results.loc[pathway,:]=scores.apply(rocauc,0)
-    results.to_csv('../results/benchmark/progeny/rocaucs/%s.csv' % method,
+        results.loc[pathway,:]=scores.apply(my_rocauc,0)
+    results.to_csv('../results/benchmark/rocaucs/progeny/%s.csv' % method,
                     sep=',')
 
 results=pd.DataFrame(index=list(set(progeny['pathway'])),
@@ -34,5 +34,5 @@ for i in range(1000):
     for pathway in results.index:
         y_tr=(progeny['pathway']==pathway)*1
         results.loc[pathway,i]=ROCAUC(y_tr,y_pr)
-results.to_csv('../results/benchmark/progeny/rocaucs/random_dist.csv',
+results.to_csv('../results/benchmark/rocaucs/progeny/random_dist.csv',
                     sep=',')
