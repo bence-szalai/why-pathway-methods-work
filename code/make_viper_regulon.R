@@ -6,7 +6,7 @@ make_regulon=function(x){
   result
 }
 
-dnames=c('single')
+dnames=c('overlap')
 for (dname in dnames){
   fnames=list.files(paste0('../results/genesets/',dname,'/csvs/'))
   for (fname in fnames){

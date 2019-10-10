@@ -15,3 +15,6 @@ notebooks/.ipynb_checkpoints/data_preprocess_and_generation-checkpoint.ipynb
 *.pyc
 data/interactions.txt
 notebooks/.ipynb_checkpoints/tf_network_preprocess-checkpoint.ipynb
+code/__pycache__/make_genesets.cpython-35.pyc
+notebooks/.ipynb_checkpoints/overlap_analysis-checkpoint.ipynb
+notebooks/.ipynb_checkpoints/Untitled-checkpoint.ipynb

@@ -12,10 +12,10 @@ for (dname in c('progeny','tcga')){
     if (abs_type=='_abs'){
       gex=abs(gex)
     }
-    genesets=list.files('../results/genesets/single/rdatas/')
+    genesets=list.files('../results/genesets/overlap/rdatas/')
     genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
     for (geneset in genesets){
-      load(paste0('../results/genesets/single/rdatas/',geneset,'.rdata'))
+      load(paste0('../results/genesets/overlap/rdatas/',geneset,'.rdata'))
       activities = viper(eset = gex, regulon = viper_geneset, nes = T, 
                          method = 'none' ,minsize = 4, eset.filter = F,cores = ncores)
       write.csv(activities,paste0('../results/benchmark/scores/',dname,'/',geneset,abs_type,'.csv'))

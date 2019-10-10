@@ -3,7 +3,7 @@ import numpy as np
 
 th=4.5
 
-bname='tcga'
+bname='progeny'
 dname1='REACTOME'
 dname2='dorothea_AB'
 
