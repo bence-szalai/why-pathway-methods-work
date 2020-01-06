@@ -22,3 +22,5 @@ notebooks/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 *.pdf
 notebooks/.ipynb_checkpoints/figures-checkpoint.ipynb
 notebooks/.ipynb_checkpoints/overlap_analysis_modified-checkpoint.ipynb
+notebooks/.ipynb_checkpoints/distance_calculation-checkpoint.ipynb
+data/omnipath/interactions.txt
