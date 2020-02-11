@@ -30,6 +30,33 @@ def make_gene_dict_dorothea(confidence):
     pckl.dump(set_gene,fout)
     fout.close()
     
+def make_different_level_BEST_dorothea():
+    data=pd.read_csv('../results/genesets/single/raw/BEST_viperRegulon.csv',
+                    sep=',',header=0,index_col=0)
+    data=pd.Series(data.index)
+    fil=~(data.apply(lambda x: 'likelihood' in x))
+    data=data[fil]
+    data.index=range(len(data))
+        
+    results=pd.DataFrame(index=data.index,columns=['Set','Gene','Confidence'])
+    results['Set']=data.apply(lambda x:x.split('_')[0])
+    results['Confidence']=data.apply(lambda x:x.split('_')[1])\
+                    .apply(lambda x:x.split(' - ')[0])
+    results['Gene']=data.apply(lambda x:x.split('tfmode.')[-1])
+    results=results.drop_duplicates()
+    for c in ['A','B','C','D','E']:
+        fil=results['Confidence']==c
+        results_conf=results[fil][['Set','Gene']].copy()
+        results_conf.to_csv('../results/genesets/single/csvs/BEST_dorothea_%s.csv' 
+                                                            % c, sep=',')
+        set_gene=results_conf.groupby('Set')['Gene'].apply(list).to_dict()
+        for s in set_gene:
+            set_gene[s]=set(set_gene[s])
+        fout=open('../results/genesets/single/dicts/BEST_dorothea_%s.pkl' \
+                                                            % c, 'wb')
+        pckl.dump(set_gene,fout)
+        fout.close()
+    
 def make_multi_level_dorothea():
     """makes multi level dorothea gene sets"""
     fin=open('../results/genesets/single/dicts/dorothea_A.pkl','rb')
@@ -59,6 +86,28 @@ def make_multi_level_dorothea():
         results['Gene']=genes
         results.to_csv('../results/genesets/single/csvs/%s.csv' \
                                                             % fname,sep=',')
+def make_multi_level_dorothea_BEST():
+    data_dict={}
+    for c in ['A','B','C','D']:
+        data_dict[c]=pd.read_csv('../results/genesets/single/csvs/BEST_dorothea_%s.csv'
+                    % c,sep=',',header=0,index_col=0)
+    data_AB=pd.concat([data_dict['A'],data_dict['B']])
+    data_CD=pd.concat([data_dict['C'],data_dict['D']])
+    data_AB.to_csv('../results/genesets/single/csvs/BEST_dorothea_AB.csv',sep=',')
+    data_CD.to_csv('../results/genesets/single/csvs/BEST_dorothea_CD.csv',sep=',')
+    set_gene=data_AB.groupby('Set')['Gene'].apply(list).to_dict()
+    for s in set_gene:
+        set_gene[s]=set(set_gene[s])
+    fout=open('../results/genesets/single/dicts/BEST_dorothea_AB.pkl', 'wb')
+    pckl.dump(set_gene,fout)
+    fout.close()
+    set_gene=data_CD.groupby('Set')['Gene'].apply(list).to_dict()
+    for s in set_gene:
+        set_gene[s]=set(set_gene[s])
+    fout=open('../results/genesets/single/dicts/BEST_dorothea_CD.pkl', 'wb')
+    pckl.dump(set_gene,fout)
+    fout.close()
+    
     
 def make_gene_dict_msigdb(setname):
     """makes gene - geneset and geneset - gene dicts for msigdb

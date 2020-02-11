@@ -6,9 +6,11 @@ make_regulon=function(x){
   result
 }
 
-dnames=c('overlap')
+dnames=c('single')
 for (dname in dnames){
-  fnames=list.files(paste0('../results/genesets/',dname,'/csvs/'))
+  fnames=c('BEST_dorothea_AB_filtered.csv','BEST_dorothea_CD_filtered.csv',
+           'BIOCARTA_filtered.csv','CGP_filtered.csv','KEGG_filtered.csv',
+           'REACTOME_filtered.csv')
   for (fname in fnames){
     data=read.csv(paste0('../results/genesets/',dname,'/csvs/',fname),sep = ',',header = T,row.names = 1)
     data=split(data$Gene,data$Set)
