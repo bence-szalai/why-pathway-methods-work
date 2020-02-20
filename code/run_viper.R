@@ -1,25 +1,26 @@
+setwd("~/Documents/Projects/why-pathway-methods-work/code")
 library(viper)
 set.seed(19890904)
 
-for (dname in c('tcga')){
+for (dname in c('tcga','progeny')){
   if (dname=='progeny'){
     ncores=10
   } else {
-    ncores=1
+    ncores=10
   }
   for (abs_type in c('_abs','')){
     gex=read.csv(paste0('../results/benchmark/datasets/',dname,'_data.csv'),sep=',',header=T,row.names = 1)
     if (abs_type=='_abs'){
       gex=abs(gex)
     }
-    genesets=list.files('../results/genesets/overlap/rdatas/')
-    genesets=genesets[-grep('dorothea',genesets)]
+    genesets=list.files('../results/genesets/single/rdatas/')
+    #genesets=genesets[-grep('dorothea',genesets)]
     genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
     for (geneset in genesets){
-      load(paste0('../results/genesets/overlap/rdatas/',geneset,'.rdata'))
+      load(paste0('../results/genesets/single/rdatas/',geneset,'.rdata'))
       activities = viper(eset = gex, regulon = viper_geneset, nes = T, 
                          method = 'none' ,minsize = 4, eset.filter = F,cores = ncores)
-      write.csv(activities,paste0('../results/benchmark/scores/',dname,'/',geneset,abs_type,'.csv'))
+      write.csv(activities,paste0('../results/benchmark/scores/',dname,'/single/',geneset,abs_type,'.csv'))
     }
   }
 }
