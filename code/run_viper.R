@@ -14,7 +14,7 @@ for (dname in c('tcga','progeny')){
       gex=abs(gex)
     }
     genesets=list.files('../results/genesets/single/rdatas/')
-    #genesets=genesets[-grep('dorothea',genesets)]
+     #genesets=genesets[-grep('dorothea',genesets)]
     genesets=unlist(lapply(genesets, function(x){substr(x,1,nchar(x)-6)}))
     for (geneset in genesets){
       load(paste0('../results/genesets/single/rdatas/',geneset,'.rdata'))

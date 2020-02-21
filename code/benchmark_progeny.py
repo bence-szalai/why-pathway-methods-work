@@ -24,7 +24,7 @@ for method in methods:
     for pathway in results.index:
         y_tr=(progeny['pathway']==pathway)*1
         results.loc[pathway,:]=scores.apply(my_rocauc,0)
-    results.to_csv('../results/benchmark/rocaucs/progeny/overlap/%s.csv' % method,
+    results.to_csv('../results/benchmark/rocaucs/progeny/single/%s.csv' % method,
                     sep=',')
 
 results=pd.DataFrame(index=list(set(progeny['pathway'])),
