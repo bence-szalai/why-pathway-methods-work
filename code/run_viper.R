@@ -2,12 +2,8 @@ setwd("~/Documents/Projects/why-pathway-methods-work/code")
 library(viper)
 set.seed(19890904)
 
-for (dname in c('tcga','progeny')){
-  if (dname=='progeny'){
-    ncores=10
-  } else {
-    ncores=10
-  }
+for (dname in c('gdsc','progeny')){
+  ncores=10
   for (abs_type in c('_abs','')){
     gex=read.csv(paste0('../results/benchmark/datasets/',dname,'_data.csv'),sep=',',header=T,row.names = 1)
     if (abs_type=='_abs'){

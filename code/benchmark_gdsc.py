@@ -1,59 +1,42 @@
 import pandas as pd
 import numpy as np
-import statsmodels.formula.api as smf
-from scipy.stats import pearsonr as pcor
+import os
 
-response=pd.read_excel('../data/gdsc/v17.3_fitted_dose_response.xlsx')
-response=response[['DRUG_ID','COSMIC_ID','LN_IC50']]
-response['DRUG_ID']=response['DRUG_ID'].astype(str)
-response['COSMIC_ID']=response['COSMIC_ID'].astype(str)
+gdsc=pd.read_csv('../results/benchmark/datasets/gdsc_meta.csv',
+                        sep=',',header=0,index_col=0)
+gdsc.columns=gdsc.columns.astype(int)
+cell_anno=pd.read_excel('../data/gdsc/Cell_Lines_Details.xlsx',skipfooter=1)
+cosmics=cell_anno['COSMIC identifier'][cell_anno['Cancer Type\n(matching TCGA label)']=='BRCA'].values    
+cosmics=list(set(cosmics)&set(gdsc.columns))
+gdsc=gdsc[cosmics]                 
+methods=[x[:-4] for x in os.listdir('../results/benchmark/scores/gdsc/single/')]
 
-anno=pd.read_csv('../results/benchmark/gdsc/raw/gdsc_cell.csv',sep=',',
-                header=0,index_col=0)
-anno['COSMIC']=anno['COSMIC'].astype(str)
-anno.index=anno.index.astype(str)
-                
-scores=pd.read_csv('../results/benchmark/scores/gdsc/KEGG.csv',sep=',',
-                header=0,index_col=0)
-
-cosmics=list(set(anno['COSMIC'])&set(response['COSMIC_ID'])&set(scores.columns))                
-fil=np.in1d(anno['COSMIC'],cosmics)
-anno=anno[fil]
-fil=np.in1d(response['COSMIC_ID'],cosmics)
-response=response[fil]
-
-for method in ['KEGG','dorothea_A','dorothea_AB','dorothea_BEST',
-                'BIOCARTA','REACTOME','CGP','dorothea_ABC',
-                'dorothea_ABCD','dorothea_ABCDE','dorothea_B','dorothea_C',
-                'dorothea_D','dorothea_E']:
-    scores=pd.read_csv('../results/benchmark/scores/gdsc/%s.csv' % method,
-                sep=',',header=0,index_col=0)
-    scores=scores[cosmics]
-    scores=scores.T
-
-    results=pd.DataFrame(index=list(set(response['DRUG_ID'])),
-                    columns=scores.columns)
-    for drug in results.index:
-        print(drug)
-        fil=response['DRUG_ID']==drug
-        response_drug=response[fil]
-        response_drug['TCGA']=anno.loc[response_drug['COSMIC_ID'].values,
-                                                            'TCGA'].values
-        response_drug['MSI']=anno.loc[response_drug['COSMIC_ID'].values,
-                                                            'MSI'].values
-        model_1=smf.ols('LN_IC50 ~ TCGA + MSI',data=response_drug).fit()
-        resid_1=model_1.resid
-        for score in results.columns:
-            response_drug['Score']=scores.loc[response_drug['COSMIC_ID'].values,
-                                                            score].values
-            model_2=smf.ols('Score ~ TCGA + MSI',data=response_drug).fit()
-            resid_2=model_2.resid
-            results.loc[drug,score]=pcor(resid_1,resid_2)[0]
-    results.to_csv('../results/benchmark/gdsc/partcors/%s.csv' % method,sep=',')
+try:
+    methods.remove('.DS_S')
+except:
+    pass
+for method in methods:
+    print(method)
+    scores=pd.read_csv('../results/benchmark/scores/gdsc/single/%s.csv' % method,
+                    sep=',',header=0,index_col=0).T
+    scores.index=pd.Series(scores.index).apply(lambda x:x[1:]).astype(int).values
+    cosmics=list(set(gdsc.columns) & set(scores.index))
+    
+   
+  
+    results=pd.concat([gdsc[cosmics].T,scores.loc[cosmics]],1)
+    results=results.corr().loc[gdsc.index,scores.columns]
+        
+    results.abs().to_csv('../results/benchmark/z_scores/gdsc/single/'+method+'.csv',
+                    sep=',')
         
         
-                
+        
+    
+    
 
+    
+    
 
 
 
