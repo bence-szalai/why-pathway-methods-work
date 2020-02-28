@@ -39,5 +39,13 @@ for method in methods:
         results.loc[pathway,:]=scores.apply(my_rocauc,0)
     results.to_csv('../results/benchmark/rocaucs/gdsc/single/%s.csv' % method,
                     sep=',')
-    (results-0.5).abs().to_csv('../results/benchmark/z_scores/gdsc/single/%s.csv' % method,
+    
+results=pd.DataFrame(index=gdsc.index,columns=range(1000))
+for i in range(1000):
+    print(i)
+    y_pr=np.random.uniform(size=gdsc.shape[1])
+    for pathway in results.index:
+        y_tr=gdsc.loc[pathway]
+        results.loc[pathway,i]=ROCAUC(y_tr,y_pr)
+results.to_csv('../results/benchmark/rocaucs/gdsc/random_dist.csv',
                     sep=',')
