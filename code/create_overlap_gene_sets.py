@@ -1,21 +1,24 @@
 import pandas as pd
 import numpy as np
 
-def create_overlap(setname1,setname2):
-    geneset1=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname1,
+def read_geneset(setname):
+    geneset=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname,
                     sep=',',header=0,index_col=0)
-    geneset1['Indicator']=1
-    geneset2=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname2,
-                        sep=',',header=0,index_col=0)
-    geneset2['Indicator']=1
-    geneset1=geneset1.pivot(index='Gene',columns='Set',values='Indicator')
-    geneset2=geneset2.pivot(index='Gene',columns='Set',values='Indicator')
-    geneset1[geneset1.isnull()]=0; geneset1=geneset1.astype(int)
-    geneset2[geneset2.isnull()]=0; geneset2=geneset2.astype(int)
-    all_genes=list(set(geneset1.index)&set(geneset2.index))
-    geneset1=geneset1.loc[all_genes]; geneset2=geneset2.loc[all_genes]
+    geneset['Indicator']=1
+    geneset=geneset.pivot(index='Gene',columns='Set',values='Indicator')
+    geneset[geneset.isnull()]=0
+    geneset=geneset.astype(int)
+    return geneset
     
-    tensor_o=np.zeros((len(all_genes),geneset1.shape[1],geneset2.shape[1]))
+def create_overlap(setname1,setname2):
+    geneset1=read_geneset(setname1)
+    geneset2=read_geneset(setname2)
+    
+    all_genes=list(set(geneset1.index)&set(geneset2.index))
+    geneset1=geneset1.loc[all_genes]
+    geneset2=geneset2.loc[all_genes]
+    
+    tensor_o=np.zeros((len(all_genes),geneset1.shape[1],geneset2.shape[1]),int)
     tensor_o+=geneset1.values.reshape((len(all_genes),geneset1.shape[1],1))
     tensor_o*=geneset2.values.reshape((len(all_genes),1,geneset2.shape[1]))
     tensor_o=tensor_o.reshape((1,-1))[0]

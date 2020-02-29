@@ -125,6 +125,18 @@ def make_gene_dict_msigdb(setname):
     pckl.dump(set_gene,fout)
     fout.close()
     
+def make_pickle_from_genese(setname):
+    data=pd.read_csv('../results/genesets/single/csvs/%s.csv' % setname,
+                    sep=',',header=0,index_col=0)
+    data_dict={}
+    for geneset in data['Set'].unique():
+        fil=data['Set']==geneset
+        genes=set(data[fil]['Gene'].unique())
+        data_dict[geneset]=genes
+    fout=open('../results/genesets/single/dicts/%s.pkl' % setname, 'wb')
+    pckl.dump(data_dict,fout)
+    fout.close()
+    
 def make_overlap_gene_sets(setname1,setname2):
     fin=open('../results/genesets/single/dicts/%s.pkl' % setname1, 'br')
     geneset1=pckl.load(fin)
