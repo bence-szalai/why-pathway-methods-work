@@ -1,4 +1,4 @@
-#setwd("~/Documents/Projects/why-pathway-methods-work/code")
+setwd("~/Documents/Projects/why-pathway-methods-work/code")
 library(viper)
 set.seed(19890904)
 
