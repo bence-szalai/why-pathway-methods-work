@@ -42,3 +42,5 @@ notebooks/.ipynb_checkpoints/overlap_fig_new-checkpoint.ipynb
 .idea/vcs.xml
 notebooks/.ipynb_checkpoints/1_data_preprocess_and_generation-checkpoint.ipynb
 .idea/other.xml
+notebooks/.ipynb_checkpoints/2_gene_set_similarity-checkpoint.ipynb
+notebooks/.ipynb_checkpoints/4_informative_vs_similarity-checkpoint.ipynb
