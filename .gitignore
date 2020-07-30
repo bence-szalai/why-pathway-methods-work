@@ -46,3 +46,4 @@ notebooks/.ipynb_checkpoints/2_gene_set_similarity-checkpoint.ipynb
 notebooks/.ipynb_checkpoints/4_informative_vs_similarity-checkpoint.ipynb
 notebooks/.ipynb_checkpoints/3_informative_scores-checkpoint.ipynb
 notebooks/.ipynb_checkpoints/5_overlap_removed-checkpoint.ipynb
+*.pages
