@@ -29,9 +29,9 @@ def get_composational_similarity(setname1,setname2):
     data1 = data1.loc[all_genes]
     data2 = data2.loc[all_genes]
 
-    #fil=pd.isnull(data1); data1[fil]=0;
+    fil=pd.isnull(data1); data1[fil]=0;
     data1=data1.astype(int)
-    #fil=pd.isnull(data2); data2[fil]=0;
+    fil=pd.isnull(data2); data2[fil]=0;
     data2=data2.astype(int)
 
     intersection=pd.DataFrame(np.dot(data1.T,data2),
