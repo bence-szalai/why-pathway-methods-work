@@ -1,4 +1,4 @@
-setwd("~/Documents/Projects/why-pathway-methods-work/code")
+#setwd("~/Documents/Projects/why-pathway-methods-work/code")
 library(biomaRt)
 
 OUTFILE='../data/omnipath/omnipath_uni_hgnc.csv'
