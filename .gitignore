@@ -104,3 +104,4 @@ figures/version2/SFigure6.png
 figures/workflow/gex_heat_example.png
 *.png
 notebooks/.ipynb_checkpoints/6_review-checkpoint.ipynb
+.idea/workspace.xml
